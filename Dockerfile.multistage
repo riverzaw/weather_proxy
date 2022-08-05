@@ -1,0 +1,14 @@
+FROM golang:1.18-buster AS build
+WORKDIR /meteo
+COPY go.mod ./
+RUN go mod download
+
+COPY *.go ./
+
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /proxy-linux
+
+FROM gcr.io/distroless/base-debian10
+WORKDIR /
+COPY --from=build /proxy-linux /proxy-linux
+EXPOSE 9034
+ENTRYPOINT ["./proxy-linux"]
