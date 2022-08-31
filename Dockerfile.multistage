@@ -7,8 +7,9 @@ COPY *.go ./
 
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o /proxy-linux
 
-FROM gcr.io/distroless/base-debian10
+FROM debian:buster-slim
 WORKDIR /
+RUN apt-get update && apt-get install -y ca-certificates
 COPY --from=build /proxy-linux /proxy-linux
 EXPOSE 9034
-ENTRYPOINT ["./proxy-linux"]
+CMD ["./proxy-linux"]

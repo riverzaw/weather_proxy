@@ -28,6 +28,7 @@ func main() {
 			r.URL.Path = "/forecast/" + key + r.URL.Path
 			q := r.URL.Query()
 			q.Add("exclude", "minutely,alerts,flags")
+			q.Add("units", "si")
 			r.URL.RawQuery = q.Encode()
 			h.ServeHTTP(w, r)
 		}
